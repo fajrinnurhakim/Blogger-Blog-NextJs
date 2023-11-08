@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { getUsers } from "@/utils/fetch";
+import { getUsers, deleteUser, createUser, updateUser } from "@/utils/fetch";
 
 export default function Users() {
     const [page, setPage] = useState(1);
@@ -11,8 +11,13 @@ export default function Users() {
 
     useEffect(() => {
         getUsers(page).then((data) => {
-            setBlogUser(data);
-            setOriginalUsers(data);
+            const sortedData = data.sort(
+                (a: any, b: any) =>
+                    new Date(b.updated_at).getTime() -
+                    new Date(a.updated_at).getTime()
+            );
+            setBlogUser(sortedData);
+            setOriginalUsers(sortedData);
         });
     }, [page]);
 
@@ -38,15 +43,28 @@ export default function Users() {
         setSearchTerm("");
     };
 
+    const handleDelete = async (userId: number) => {
+        await deleteUser(userId);
+        getUsers(page).then((data) => {
+            const sortedData = data.sort(
+                (a: any, b: any) =>
+                    new Date(b.updated_at).getTime() -
+                    new Date(a.updated_at).getTime()
+            );
+            setBlogUser(sortedData);
+            setOriginalUsers(sortedData);
+        });
+    };
+
     return (
         <main className="flex flex-col p-5 mt-10">
-            <div className="m-auto flex space-x-2 w-1/2 mt-5">
+            <div className="flex flex-col w-full py-2 m-auto mt-5 space-y-2 lg:space-y-0 lg:flex-row lg:space-x-2 lg:w-1/2">
                 <input
                     type="text"
                     placeholder="Search"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="input input-bordered w-full"
+                    className="w-full input input-bordered"
                 />
                 <button className="btn btn-primary" onClick={handleSearch}>
                     Search
@@ -55,42 +73,43 @@ export default function Users() {
                     Reset
                 </button>
             </div>
-            <div className="p-5 grid grid-cols-1 lg:grid-cols-2 gap-5">
+            <div className="grid grid-cols-1 gap-5 pb-5 lg:grid-cols-2">
                 {blogUser.map((post: any, index: number) => (
-                    <>
-                        <div className="shadow-md card" key={index}>
-                            <div className="card-body">
-                                <div className="flex flex-row justify-between">
-                                    <div className="flex flex-row space-x-2">
-                                        <Image
-                                            src="user.svg"
-                                            alt="Deskripsi Gambar"
-                                            width={24}
-                                            height={24}
-                                        />
-                                        <h2>{post.name}</h2>
-                                    </div>
-                                    {post.status === "active" ? (
-                                        <div className="w-4 h-4 rounded-full bg-green-500"></div>
-                                    ) : (
-                                        <div className="w-4 h-4 rounded-full bg-red-500"></div>
-                                    )}
+                    <div className="shadow-md card" key={index}>
+                        <div className="card-body">
+                            <div className="flex flex-row justify-between">
+                                <div className="flex flex-row space-x-2">
+                                    <Image
+                                        src="user.svg"
+                                        alt="Deskripsi Gambar"
+                                        width={24}
+                                        height={24}
+                                    />
+                                    <h2>{post.name}</h2>
                                 </div>
-                                <hr />
-                                <p>Email : {post.email}</p>
-                                <p>Gender : {post.gender}</p>
+                                {post.status === "active" ? (
+                                    <div className="w-4 h-4 bg-green-500 rounded-full"></div>
+                                ) : (
+                                    <div className="w-4 h-4 bg-red-500 rounded-full"></div>
+                                )}
+                            </div>
+                            <hr />
+                            <p>Email : {post.email}</p>
+                            <p>Gender : {post.gender}</p>
 
-                                <div className="justify-end card-actions">
-                                    <button className="btn btn-primary">
-                                        Details
-                                    </button>
-                                </div>
+                            <div className="justify-end card-actions">
+                                <button
+                                    className="btn btn-primary"
+                                    onClick={() => handleDelete(post.id)}
+                                >
+                                    Delete
+                                </button>
                             </div>
                         </div>
-                    </>
+                    </div>
                 ))}
             </div>
-            <div className="join justify-center">
+            <div className="justify-center join">
                 <button
                     className="join-item btn btn-primary"
                     onClick={handlePrevPage}

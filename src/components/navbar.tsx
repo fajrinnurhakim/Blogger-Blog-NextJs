@@ -2,13 +2,13 @@ import Link from "next/link";
 
 export default async function Navbar() {
     return (
-        <div className="navbar bg-base-100 shadow-sm fixed w-full z-10 top-0">
+        <div className="fixed top-0 z-10 w-full shadow-sm navbar bg-base-100">
             <div className="navbar-start">
                 <div className="dropdown">
                     <label tabIndex={0} className="btn btn-ghost lg:hidden">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            className="h-5 w-5"
+                            className="w-5 h-5"
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
@@ -33,10 +33,12 @@ export default async function Navbar() {
                         </li>
                     </ul>
                 </div>
-                <a className="btn btn-ghost text-xl">Blogger</a>
+                <Link href="/" className="text-xl btn btn-ghost">
+                    Blogger
+                </Link>
             </div>
-            <div className="navbar-end hidden lg:flex">
-                <ul className="menu menu-horizontal px-1">
+            <div className="hidden navbar-end lg:flex">
+                <ul className="px-1 menu menu-horizontal">
                     <li>
                         <Link href="/">Home</Link>
                     </li>
