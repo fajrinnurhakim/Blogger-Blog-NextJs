@@ -1,14 +1,19 @@
 "use client";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { getPost } from "@/utils/api";
+import { getPosts, getComment } from "@/utils/fetch";
 
 export default function Home() {
     const [page, setPage] = useState(1);
     const [blogPost, setBlogPost] = useState([]);
+    const [comments, setComments] = useState([]);
+    const [currentPostId, setCurrentPostId] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedPostBody, setSelectedPostBody] = useState("");
+    const [selectedPostTitle, setSelectedPostTitle] = useState("");
 
     useEffect(() => {
-        getPost(page).then((data) => setBlogPost(data));
+        getPosts(page).then((data) => setBlogPost(data));
     }, [page]);
 
     const handlePrevPage = () => {
@@ -21,8 +26,22 @@ export default function Home() {
         setPage(page + 1);
     };
 
+    const handlePostClick = async (postId: any) => {
+        const data = await getComment(postId);
+        const postData: any = blogPost.find((post: any) => post.id === postId);
+        setSelectedPostBody(postData.body);
+        setSelectedPostTitle(postData.title);
+        setComments(data);
+        setCurrentPostId(postId);
+        setIsModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+    };
+
     return (
-        <main className="flex flex-col p-5">
+        <main className="flex flex-col p-5 mt-10">
             <div className="p-5 m-auto grid grid-cols-1 lg:grid-cols-2 gap-5">
                 {blogPost.map((post: any, index: number) => (
                     <>
@@ -45,21 +64,69 @@ export default function Home() {
                                         : post.body}
                                 </p>
                                 <div className="justify-end card-actions">
-                                    <button className="btn btn-primary">
+                                    <button
+                                        className="btn btn-primary"
+                                        onClick={() => handlePostClick(post.id)}
+                                    >
                                         Details
                                     </button>
                                 </div>
+                                {isModalOpen && (
+                                    <dialog className="modal" open>
+                                        <div className="modal-box shadow-sm">
+                                            <button
+                                                className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                                                onClick={handleCloseModal}
+                                            >
+                                                ✕
+                                            </button>
+                                            <p className="font-bold">
+                                                {selectedPostTitle}
+                                            </p>
+                                            <p>{selectedPostBody}</p>
+                                            <hr />
+                                            <p className="font-bold">
+                                                Comments
+                                            </p>
+                                            {comments.map(
+                                                (comment: any) =>
+                                                    comment.post_id ===
+                                                        currentPostId && (
+                                                        <div
+                                                            className="bg-gray-100 p-2 rounded-lg mb-1"
+                                                            key={comment.id}
+                                                        >
+                                                            <h3 className="font-bold">
+                                                                {comment.name}
+                                                            </h3>
+                                                            <p>
+                                                                {comment.body}
+                                                            </p>
+                                                        </div>
+                                                    )
+                                            )}
+                                        </div>
+                                    </dialog>
+                                )}
                             </div>
                         </div>
                     </>
                 ))}
             </div>
             <div className="join justify-center">
-                <button className="join-item btn" onClick={handlePrevPage}>
+                <button
+                    className="join-item btn btn-primary"
+                    onClick={handlePrevPage}
+                >
                     «
                 </button>
-                <button className="join-item btn">Page {page}</button>
-                <button className="join-item btn" onClick={handleNextPage}>
+                <button className="join-item btn btn-primary">
+                    Page {page}
+                </button>
+                <button
+                    className="join-item btn btn-primary"
+                    onClick={handleNextPage}
+                >
                     »
                 </button>
             </div>
