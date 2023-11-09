@@ -54,24 +54,25 @@ export const createUser = async (user: any): Promise<any> => {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer 8ae35952545413abeba0a28f31eb643d0f646dc50b1033a1b1aaea8f533eaa08`,
+                Authorization: `Bearer ${process.env.NEXT_PUBLIC_KEY}`,
             },
             body: JSON.stringify(user),
         });
+        const data = await response.json();
         if (!response.ok) {
             Swal.fire({
                 icon: "error",
                 title: "Bad request.",
-                text: "Bad request",
+                text: data.data[0].field + " " + data.data[0].message,
             });
+        } else {
+            Swal.fire({
+                icon: "success",
+                title: "Success.",
+                text: "Create Successfully",
+            });
+            window.location.href = "/users";
         }
-        const data = await response.json();
-        Swal.fire({
-            icon: "success",
-            title: "Success.",
-            text: "Create Successfully",
-        });
-        window.location.href = "/users";
         return data;
     } catch (error) {
         Swal.fire({
@@ -90,7 +91,7 @@ export const deleteUser = async (userId: number): Promise<any> => {
             {
                 method: "DELETE",
                 headers: {
-                    Authorization: `Bearer 8ae35952545413abeba0a28f31eb643d0f646dc50b1033a1b1aaea8f533eaa08`,
+                    Authorization: `Bearer ${process.env.NEXT_PUBLIC_KEY}`,
                 },
             }
         );

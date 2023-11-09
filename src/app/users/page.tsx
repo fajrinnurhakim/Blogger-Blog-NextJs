@@ -12,6 +12,11 @@ export default function Users() {
 
     useEffect(() => {
         getUsers(page).then((data: any) => {
+            data.sort(
+                (a: any, b: any) =>
+                    new Date(b.created_at).getTime() -
+                    new Date(a.created_at).getTime()
+            );
             setBlogUser(data);
             setOriginalUsers(data);
         });
