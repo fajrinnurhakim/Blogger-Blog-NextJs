@@ -14,13 +14,14 @@ export default async function Navbar() {
                             stroke="currentColor"
                         >
                             <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
                                 d="M4 6h16M4 12h8m-8 6h16"
                             />
                         </svg>
                     </label>
+
                     <ul
                         tabIndex={0}
                         className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
@@ -33,10 +34,12 @@ export default async function Navbar() {
                         </li>
                     </ul>
                 </div>
+
                 <Link href="/" className="text-xl btn btn-ghost">
                     Blogger
                 </Link>
             </div>
+            
             <div className="hidden navbar-end lg:flex">
                 <ul className="px-1 menu menu-horizontal">
                     <li>

@@ -56,6 +56,7 @@ export default function Home() {
                                     />
                                     <h2>{post.user_id}</h2>
                                 </div>
+
                                 <hr />
                                 <h2 className="card-title">{post.title}</h2>
                                 <p>
@@ -63,6 +64,7 @@ export default function Home() {
                                         ? post.body.substring(0, 50) + "..."
                                         : post.body}
                                 </p>
+
                                 <div className="justify-end card-actions">
                                     <button
                                         className="btn btn-primary"
@@ -72,7 +74,7 @@ export default function Home() {
                                     </button>
                                 </div>
                                 {isModalOpen && (
-                                    <dialog className="modal" open>
+                                    <dialog className="modal modal-open" open>
                                         <div className="shadow-sm modal-box">
                                             <button
                                                 className="absolute btn btn-sm btn-circle btn-ghost right-2 top-2"
@@ -113,6 +115,7 @@ export default function Home() {
                     </>
                 ))}
             </div>
+            
             <div className="justify-center join">
                 <button
                     className="join-item btn btn-primary"
