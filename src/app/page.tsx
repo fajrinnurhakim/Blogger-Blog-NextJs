@@ -115,7 +115,7 @@ export default function Home() {
                     </>
                 ))}
             </div>
-            
+
             <div className="justify-center join">
                 <button
                     className="join-item btn btn-primary"

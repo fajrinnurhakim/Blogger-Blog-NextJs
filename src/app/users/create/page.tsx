@@ -21,21 +21,21 @@ export default function CreateUsers() {
     };
 
     return (
-        <div className="container mx-auto p-4 py-20">
+        <div className="container p-4 py-20 mx-auto">
             <form
                 onSubmit={handleSubmit}
-                className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+                className="px-8 pt-6 pb-8 mb-4 bg-white rounded shadow-md"
             >
                 <div className="mb-4">
                     <label
-                        className="block text-gray-700 text-sm font-bold mb-2"
+                        className="block mb-2 text-sm font-bold text-gray-700"
                         htmlFor="name"
                     >
                         Name<span className="text-red-500">*</span>
                     </label>
 
                     <input
-                        className="input input-bordered w-full"
+                        className="w-full input input-bordered"
                         id="name"
                         type="text"
                         value={name}
@@ -46,14 +46,14 @@ export default function CreateUsers() {
 
                 <div className="mb-4">
                     <label
-                        className="block text-gray-700 text-sm font-bold mb-2"
+                        className="block mb-2 text-sm font-bold text-gray-700"
                         htmlFor="email"
                     >
                         Email<span className="text-red-500">*</span>
                     </label>
 
                     <input
-                        className="input input-bordered w-full"
+                        className="w-full input input-bordered"
                         id="email"
                         type="email"
                         value={email}
@@ -61,16 +61,16 @@ export default function CreateUsers() {
                         required
                     />
                 </div>
-                
+
                 <div className="mb-4">
                     <label
-                        className="block text-gray-700 text-sm font-bold mb-2"
+                        className="block mb-2 text-sm font-bold text-gray-700"
                         htmlFor="gender"
                     >
                         Gender<span className="text-red-500">*</span>
                     </label>
                     <select
-                        className="select select-bordered w-full"
+                        className="w-full select select-bordered"
                         id="gender"
                         value={gender}
                         onChange={(e) => setGender(e.target.value)}
@@ -84,13 +84,13 @@ export default function CreateUsers() {
 
                 <div className="mb-4">
                     <label
-                        className="block text-gray-700 text-sm font-bold mb-2"
+                        className="block mb-2 text-sm font-bold text-gray-700"
                         htmlFor="status"
                     >
                         Status<span className="text-red-500">*</span>
                     </label>
                     <select
-                        className="select select-bordered w-full"
+                        className="w-full select select-bordered"
                         id="status"
                         value={status}
                         onChange={(e) => setStatus(e.target.value)}
@@ -101,9 +101,9 @@ export default function CreateUsers() {
                         <option value="inactive">Inactive</option>
                     </select>
                 </div>
-                
+
                 <div className="flex items-center justify-between">
-                    <button className="btn btn-primary w-full" type="submit">
+                    <button className="w-full btn btn-primary" type="submit">
                         Create User
                     </button>
                 </div>
