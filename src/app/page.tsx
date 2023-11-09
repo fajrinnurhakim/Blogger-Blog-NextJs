@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import { getPosts, getComment } from "@/utils/fetch";
+import Image from "next/image";
 
 export default function Home() {
     const [page, setPage] = useState(1);
