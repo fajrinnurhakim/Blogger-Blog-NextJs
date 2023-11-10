@@ -129,7 +129,7 @@ export const deleteUser = async (userId: number): Promise<any> => {
 //                 method: "PUT",
 //                 headers: {
 //                     "Content-Type": "application/json",
-//                     Authorization: `Bearer 8ae35952545413abeba0a28f31eb643d0f646dc50b1033a1b1aaea8f533eaa08`,
+//                     Authorization: `Bearer ${process.env.NEXT_PUBLIC_KEY}`,
 //                 },
 //                 body: JSON.stringify(user),
 //             }
