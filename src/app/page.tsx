@@ -74,7 +74,7 @@ export default function Home() {
                                     </button>
                                 </div>
                                 {isModalOpen && (
-                                    <dialog className="modal modal-open" open>
+                                    <div className="modal modal-open">
                                         <div className="shadow-sm modal-box">
                                             <button
                                                 className="absolute btn btn-sm btn-circle btn-ghost right-2 top-2"
@@ -108,7 +108,7 @@ export default function Home() {
                                                     )
                                             )}
                                         </div>
-                                    </dialog>
+                                    </div>
                                 )}
                             </div>
                         </div>
