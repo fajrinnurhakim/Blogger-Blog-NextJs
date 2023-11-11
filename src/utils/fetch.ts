@@ -121,27 +121,65 @@ export const deleteUser = async (userId: number): Promise<any> => {
     }
 };
 
-// export const updateUser = async (userId: number, user: any): Promise<any> => {
-//     try {
-//         const response = await fetch(
-//             `https://gorest.co.in/public/v2/users/${userId}`,
-//             {
-//                 method: "PUT",
-//                 headers: {
-//                     "Content-Type": "application/json",
-//                     Authorization: `Bearer ${process.env.NEXT_PUBLIC_KEY}`,
-//                 },
-//                 body: JSON.stringify(user),
-//             }
-//         );
-//         if (!response.ok) {
-//             throw new Error("Bad request.");
-//         }
-//         const data = await response.json();
-//         console.log(data);
-//         return data;
-//     } catch (error) {
-//         console.error("Error updating user:", error);
-//         return [];
-//     }
-// };
+export const updateUser = async (userId: number, user: any): Promise<any> => {
+    try {
+        const response = await fetch(
+            `https://gorest.co.in/public/v2/users/${userId}`,
+            {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${process.env.NEXT_PUBLIC_KEY}`,
+                },
+                body: JSON.stringify(user),
+            }
+        );
+        const data = await response.json();
+        console.log(data);
+        if (!response.ok) {
+            Swal.fire({
+                icon: "error",
+                title: "Bad request.",
+                text: data.data[0].field + " " + data.data[0].message,
+            });
+        } else {
+            Swal.fire({
+                icon: "success",
+                title: "Success.",
+                text: "Update Successfully",
+            });
+        }
+        return data;
+    } catch (error) {
+        Swal.fire({
+            icon: "error",
+            title: "Not Success",
+            text: "Error updating user",
+        });
+        console.error(error);
+        return [];
+    }
+};
+
+export const getUserById = async (userId: number): Promise<any> => {
+    try {
+        const response = await fetch(
+            `https://gorest.co.in/public/v2/users/${userId}`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${process.env.NEXT_PUBLIC_KEY}`,
+                },
+            }
+        );
+        if (!response.ok) {
+            throw new Error("Bad request.");
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error("Error fetching user:", error);
+        return [];
+    }
+};

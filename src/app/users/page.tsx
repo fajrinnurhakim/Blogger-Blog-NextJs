@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { getUsers, deleteUser } from "@/utils/fetch";
+import { getUsers, deleteUser, updateUser, getUserById } from "@/utils/fetch";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -9,6 +9,8 @@ export default function Users() {
     const [blogUser, setBlogUser] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [originalUsers, setOriginalUsers] = useState([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedUser, setSelectedUser] = useState(null);
 
     useEffect(() => {
         getUsers(page).then((data: any) => {
@@ -46,6 +48,30 @@ export default function Users() {
 
     const handleDelete = async (userId: any) => {
         await deleteUser(userId);
+        getUsers(page).then((data) => {
+            setBlogUser(data);
+            setOriginalUsers(data);
+        });
+    };
+
+    const handleUpdate = async (userId: any) => {
+        const user = await getUserById(userId);
+        setSelectedUser(user);
+        setIsModalOpen(true);
+    };
+    const handleCancel = async () => {
+        setIsModalOpen(false);
+    };
+
+    const handleSave = async () => {
+        const updatedUser = {
+            name: selectedUser.name,
+            email: selectedUser.email,
+            gender: selectedUser.gender,
+            status: selectedUser.status,
+        };
+        await updateUser(selectedUser.id, updatedUser);
+        setIsModalOpen(false);
         getUsers(page).then((data) => {
             setBlogUser(data);
             setOriginalUsers(data);
@@ -103,7 +129,10 @@ export default function Users() {
                             <p>Gender : {post.gender}</p>
 
                             <div className="justify-end card-actions">
-                                <button className="btn btn-primary">
+                                <button
+                                    className="btn btn-primary"
+                                    onClick={() => handleUpdate(post.id)}
+                                >
                                     Update
                                 </button>
 
@@ -138,6 +167,103 @@ export default function Users() {
                     »
                 </button>
             </div>
+            {isModalOpen && (
+                <div className="modal modal-open">
+                    <div className="shadow-sm modal-box space-y-2">
+                        <h2 className="text-center font-bold">Update User</h2>
+                        <label
+                            className="block mb-2 text-sm font-bold text-gray-700"
+                            htmlFor="name"
+                        >
+                            Name
+                        </label>
+                        <input
+                            className="input input-bordered w-full"
+                            id="name"
+                            type="text"
+                            value={selectedUser?.name}
+                            onChange={(e) =>
+                                setSelectedUser({
+                                    ...selectedUser,
+                                    name: e.target.value,
+                                })
+                            }
+                        />
+                        <label
+                            className="block mb-2 text-sm font-bold text-gray-700"
+                            htmlFor="email"
+                        >
+                            Email
+                        </label>
+                        <input
+                            className="input input-bordered w-full"
+                            id="email"
+                            type="text"
+                            value={selectedUser?.email}
+                            onChange={(e) =>
+                                setSelectedUser({
+                                    ...selectedUser,
+                                    email: e.target.value,
+                                })
+                            }
+                        />
+                        <label
+                            className="block mb-2 text-sm font-bold text-gray-700"
+                            htmlFor="gender"
+                        >
+                            Gender
+                        </label>
+                        <select
+                            className="select select-bordered w-full"
+                            id="gender"
+                            value={selectedUser?.gender}
+                            onChange={(e) =>
+                                setSelectedUser({
+                                    ...selectedUser,
+                                    gender: e.target.value,
+                                })
+                            }
+                        >
+                            <option value="male">male</option>
+                            <option value="female">female</option>
+                        </select>
+                        <label
+                            className="block mb-2 text-sm font-bold text-gray-700"
+                            htmlFor="status"
+                        >
+                            Status
+                        </label>
+                        <select
+                            className="select select-bordered w-full"
+                            id="status"
+                            value={selectedUser?.status}
+                            onChange={(e) =>
+                                setSelectedUser({
+                                    ...selectedUser,
+                                    status: e.target.value,
+                                })
+                            }
+                        >
+                            <option value="active">active</option>
+                            <option value="inactive">inactive</option>
+                        </select>
+                        <div className="flex flex-row w-full space-x-2">
+                            <button
+                                className="btn btn-primary w-1/2"
+                                onClick={handleSave}
+                            >
+                                Save
+                            </button>
+                            <button
+                                className="btn btn-secondary w-1/2"
+                                onClick={handleCancel}
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </main>
     );
 }
