@@ -4,21 +4,24 @@ import { getUsers, deleteUser, updateUser, getUserById } from "@/utils/fetch";
 import Image from "next/image";
 import Link from "next/link";
 
+interface User {
+    id: number;
+    name: string;
+    email: string;
+    gender: string;
+    status: string;
+}
+
 export default function Users() {
     const [page, setPage] = useState(1);
-    const [blogUser, setBlogUser] = useState([]);
+    const [blogUser, setBlogUser] = useState<User[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
-    const [originalUsers, setOriginalUsers] = useState([]);
+    const [originalUsers, setOriginalUsers] = useState<User[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedUser, setSelectedUser] = useState(null);
+    const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
     useEffect(() => {
         getUsers(page).then((data: any) => {
-            data.sort(
-                (a: any, b: any) =>
-                    new Date(b.created_at).getTime() -
-                    new Date(a.created_at).getTime()
-            );
             setBlogUser(data);
             setOriginalUsers(data);
         });
@@ -54,7 +57,7 @@ export default function Users() {
         });
     };
 
-    const handleUpdate = async (userId: any) => {
+    const handleUpdate = async (userId: number) => {
         const user = await getUserById(userId);
         setSelectedUser(user);
         setIsModalOpen(true);
@@ -64,18 +67,20 @@ export default function Users() {
     };
 
     const handleSave = async () => {
-        const updatedUser = {
-            name: selectedUser.name,
-            email: selectedUser.email,
-            gender: selectedUser.gender,
-            status: selectedUser.status,
-        };
-        await updateUser(selectedUser.id, updatedUser);
-        setIsModalOpen(false);
-        getUsers(page).then((data) => {
-            setBlogUser(data);
-            setOriginalUsers(data);
-        });
+        if (selectedUser && selectedUser.id) {
+            const updatedUser = {
+                name: selectedUser.name,
+                email: selectedUser.email,
+                gender: selectedUser.gender,
+                status: selectedUser.status,
+            };
+            await updateUser(selectedUser.id, updatedUser);
+            setIsModalOpen(false);
+            getUsers(page).then((data: User[]) => {
+                setBlogUser(data);
+                setOriginalUsers(data);
+            });
+        }
     };
 
     return (
@@ -183,10 +188,14 @@ export default function Users() {
                             type="text"
                             value={selectedUser?.name}
                             onChange={(e) =>
-                                setSelectedUser({
-                                    ...selectedUser,
-                                    name: e.target.value,
-                                })
+                                setSelectedUser(
+                                    selectedUser
+                                        ? {
+                                              ...selectedUser,
+                                              name: e.target.value,
+                                          }
+                                        : null
+                                )
                             }
                         />
                         <label
@@ -201,10 +210,14 @@ export default function Users() {
                             type="text"
                             value={selectedUser?.email}
                             onChange={(e) =>
-                                setSelectedUser({
-                                    ...selectedUser,
-                                    email: e.target.value,
-                                })
+                                setSelectedUser(
+                                    selectedUser
+                                        ? {
+                                              ...selectedUser,
+                                              email: e.target.value,
+                                          }
+                                        : null
+                                )
                             }
                         />
                         <label
@@ -218,10 +231,14 @@ export default function Users() {
                             id="gender"
                             value={selectedUser?.gender}
                             onChange={(e) =>
-                                setSelectedUser({
-                                    ...selectedUser,
-                                    gender: e.target.value,
-                                })
+                                setSelectedUser(
+                                    selectedUser
+                                        ? {
+                                              ...selectedUser,
+                                              gender: e.target.value,
+                                          }
+                                        : null
+                                )
                             }
                         >
                             <option value="male">male</option>
@@ -238,10 +255,14 @@ export default function Users() {
                             id="status"
                             value={selectedUser?.status}
                             onChange={(e) =>
-                                setSelectedUser({
-                                    ...selectedUser,
-                                    status: e.target.value,
-                                })
+                                setSelectedUser(
+                                    selectedUser
+                                        ? {
+                                              ...selectedUser,
+                                              status: e.target.value,
+                                          }
+                                        : null
+                                )
                             }
                         >
                             <option value="active">active</option>
