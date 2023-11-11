@@ -126,7 +126,7 @@ export const updateUser = async (userId: number, user: any): Promise<any> => {
         const response = await fetch(
             `https://gorest.co.in/public/v2/users/${userId}`,
             {
-                method: "PATCH",
+                method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${process.env.NEXT_PUBLIC_KEY}`,
